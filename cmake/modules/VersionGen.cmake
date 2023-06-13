@@ -7,13 +7,13 @@ macro (VERSION_GEN _version _version_file _default_version)
 
     # First see if there is a version file (included in release tarballs),
     # then try git-describe, then default.
-    if (EXISTS "${CMAKE_SOURCE_DIR}/version")
-        file (STRINGS "${CMAKE_SOURCE_DIR}/version" _version_strs LIMIT_COUNT 1)
+    if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/version")
+        file (STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/version" _version_strs LIMIT_COUNT 1)
         list (GET _version_strs 0 _version_strs0)
         if (NOT (${_version_strs0} STREQUAL ""))
             set (_vn "v${_version_strs0}")
         endif (NOT (${_version_strs0} STREQUAL ""))
-    elseif (EXISTS "${CMAKE_SOURCE_DIR}/.git")
+    elseif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.git")
         execute_process (COMMAND git describe --match "v[0-9]*" --abbrev=4 HEAD
                          RESULT_VARIABLE _git_result
                          OUTPUT_VARIABLE _git_vn
@@ -56,7 +56,7 @@ macro (VERSION_GEN _version _version_file _default_version)
             # Substitute . for - in the result
             string (REPLACE "-" "." _vn "${_git_vn}")
         endif (_git_result EQUAL 0)
-    endif (EXISTS "${CMAKE_SOURCE_DIR}/version")
+    endif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/version")
 
     # Strip leading "v" from version
     #message (STATUS "_vn: ${_vn}")
